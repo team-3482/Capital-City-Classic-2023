@@ -27,7 +27,7 @@ public class RobotContainer {
         () -> -driveController.getLeftY(),
         () -> -driveController.getLeftX(),
         () -> driveController.getRawAxis(Constants.ControllerConstants.DRIVE_ROT_AXIS),
-        () -> driveController.getHID().getAButton()));
+        () -> !driveController.getHID().getAButton()));
 
     configureBindings();
   }

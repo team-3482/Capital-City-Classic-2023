@@ -12,7 +12,8 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants;
+import frc.robot.Constants.SwerveKinematics;
+import frc.robot.Constants.SwerveModuleConstants;
 
 public class SwerveModule {
     // Instances of the drivng and turning motor for the module
@@ -58,7 +59,7 @@ public class SwerveModule {
         this.turningMotor.setInverted(turningMotorReversed);
 
         // Initializes the turning encoder on the specific CAN bus
-        this.turningEncoder = new CANCoder(turningEncoderID, Constants.SwerveModuleConstants.SWERVE_CAN_BUS);
+        this.turningEncoder = new CANCoder(turningEncoderID, SwerveModuleConstants.SWERVE_CAN_BUS);
 
         // Initializes a new CANcoder config to make sure the CANcoder is outputing the
         // values how the module needs them (radians/second + angles from (-180 to 180))
@@ -71,8 +72,8 @@ public class SwerveModule {
         this.turningEncoder.configAllSettings(config);
 
         // Initializes the PID controller using the determined values
-        this.turningPidController = new PIDController(Constants.SwerveKinematics.KP, Constants.SwerveKinematics.KI,
-                Constants.SwerveKinematics.KD);
+        this.turningPidController = new PIDController(SwerveKinematics.KP, SwerveKinematics.KI,
+                SwerveKinematics.KD);
         // Makes the values continueous, so that 0 == 360 degrees
         this.turningPidController.enableContinuousInput(-Math.PI, Math.PI);
 
@@ -104,7 +105,7 @@ public class SwerveModule {
      */
     public double getAbsoluteEncoderRad() {
         double angle = this.turningEncoder.getAbsolutePosition();
-        angle -= absoluteEncoderOffsetRad;
+        angle -= this.absoluteEncoderOffsetRad;
         return angle * (this.absoluteEncoderReversed ? -1.0 : 1.0);
     }
 
@@ -138,7 +139,7 @@ public class SwerveModule {
         state = SwerveModuleState.optimize((state), getState().angle);
 
         double driveMotorSpeed = state.speedMetersPerSecond
-                / Constants.SwerveKinematics.PHYSICAL_MAX_SPEED_METERS_PER_SECOND;
+                / SwerveKinematics.PHYSICAL_MAX_SPEED_METERS_PER_SECOND;
 
         double turnMotorSpeed = turningPidController.calculate(getTurningPosition(), state.angle.getRadians());
 
