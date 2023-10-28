@@ -5,13 +5,13 @@
 package frc.robot.commands;
 
 import frc.robot.Constants;
+import frc.robot.Constants.SwerveKinematics;
 import frc.robot.subsystems.SwerveSubsystem;
 
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class SwerveDrive extends CommandBase {
@@ -23,6 +23,7 @@ public class SwerveDrive extends CommandBase {
   private final Supplier<Double> ySpeedFunction;
   private final Supplier<Double> turningSpeedFunction;
   private final Supplier<Boolean> fieldOrientedFunction;
+  private final Supplier<Boolean> fineControlFunction;
 
   // Instances of Rate Limiters to ensure that the robot moves smoothly
   private final SlewRateLimiter xLimiter;
@@ -43,12 +44,14 @@ public class SwerveDrive extends CommandBase {
    *                              to be field Oriented or robot oriented
    */
   public SwerveDrive(SwerveSubsystem swerveSubsystem, Supplier<Double> xSpeedFunction, Supplier<Double> ySpeedFunction,
-      Supplier<Double> turningSpeedFunction, Supplier<Boolean> fieldOrientedFunction) {
+      Supplier<Double> turningSpeedFunction, Supplier<Boolean> fieldOrientedFunction,
+      Supplier<Boolean> fineControlFunction) {
     this.swerveSubsystem = swerveSubsystem;
     this.xSpeedFunction = xSpeedFunction;
     this.ySpeedFunction = ySpeedFunction;
     this.turningSpeedFunction = turningSpeedFunction;
     this.fieldOrientedFunction = fieldOrientedFunction;
+    this.fineControlFunction = fineControlFunction;
 
     this.xLimiter = new SlewRateLimiter(Constants.SwerveKinematics.MAX_DRIVE_ACCELERATION_METERS_PER_SECOND_SQUARED);
     this.yLimiter = new SlewRateLimiter(Constants.SwerveKinematics.MAX_DRIVE_ACCELERATION_METERS_PER_SECOND_SQUARED);
@@ -66,6 +69,7 @@ public class SwerveDrive extends CommandBase {
     double xSpeed = xSpeedFunction.get();
     double ySpeed = ySpeedFunction.get();
     double turningSpeed = turningSpeedFunction.get();
+    boolean fineControl = fineControlFunction.get();
 
     // Checks forcontroller deadband in case joysticks do not return perfectly to
     // origin
@@ -74,8 +78,10 @@ public class SwerveDrive extends CommandBase {
     turningSpeed = Math.abs(turningSpeed) > Constants.ControllerConstants.DEADBAND ? turningSpeed : 0.0;
 
     // Limits the input so that the robot is smooth
-    xSpeed = xLimiter.calculate(xSpeed) * Constants.SwerveKinematics.MAX_DRIVE_SPEED_METERS_PER_SECOND;
-    ySpeed = yLimiter.calculate(ySpeed) * Constants.SwerveKinematics.MAX_DRIVE_SPEED_METERS_PER_SECOND;
+    xSpeed = xLimiter.calculate(xSpeed) * Constants.SwerveKinematics.MAX_DRIVE_SPEED_METERS_PER_SECOND
+        / (fineControl ? SwerveKinematics.FINE_CONTROL_DIVIDER : 1);
+    ySpeed = yLimiter.calculate(ySpeed) * Constants.SwerveKinematics.MAX_DRIVE_SPEED_METERS_PER_SECOND
+        / (fineControl ? SwerveKinematics.FINE_CONTROL_DIVIDER : 1);
     turningSpeed = turningLimiter.calculate(turningSpeed)
         * Constants.SwerveKinematics.MAX_DRIVE_ANGULAR_SPEED_RADIANS_PER_SECOND;
 
@@ -90,9 +96,7 @@ public class SwerveDrive extends CommandBase {
     }
     // Converts the chassis speeds to module states and sets them as the desired
     // ones for the modules
-    SwerveModuleState[] moduleStates = Constants.SwerveKinematics.driveKinematics.toSwerveModuleStates(chassisSpeeds);
-    swerveSubsystem.setModuleStates(moduleStates);
-
+    swerveSubsystem.setChasisSpeeds(chassisSpeeds);
     // Ouputs the swerve system information
     swerveSubsystem.outputEncoderValues();
   }

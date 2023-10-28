@@ -1,8 +1,13 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.sensors.Pigeon2;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -52,6 +57,9 @@ public class SwerveSubsystem extends SubsystemBase {
     private Pigeon2 gyro = new Pigeon2(SwerveModuleConstants.GRYO_ID,
             SwerveModuleConstants.SWERVE_CAN_BUS);
 
+    private SwerveDriveOdometry odometer = new SwerveDriveOdometry(SwerveKinematics.driveKinematics, new Rotation2d(0),
+            getModulePositions());
+
     /**
      * Initializes a new SwerveSubsystem object, and zeros the heading after a delay
      * to allow the pigeon to turn on and load
@@ -91,6 +99,34 @@ public class SwerveSubsystem extends SubsystemBase {
         return Rotation2d.fromDegrees(getHeading());
     }
 
+    public SwerveModulePosition[] getModulePositions() {
+        SwerveModulePosition[] positions = new SwerveModulePosition[] { this.moduleOne.getPosition(),
+                this.moduleTwo.getPosition(), this.moduleThree.getPosition(), this.moduleFour.getPosition() };
+        return positions;
+    }
+
+    public SwerveModuleState[] getModuleStates() {
+        SwerveModuleState[] states = new SwerveModuleState[] { this.moduleOne.getState(),
+                this.moduleTwo.getState(), this.moduleThree.getState(), this.moduleFour.getState() };
+        return states;
+    }
+
+    public Pose2d getPose() {
+        return odometer.getPoseMeters();
+    }
+
+    public void resetOdometry(Pose2d pose) {
+        odometer.resetPosition(getRotation2d(), getModulePositions(), pose);
+    }
+
+    @Override
+    public void periodic() {
+        odometer.update(getRotation2d(), getModulePositions());
+
+        SmartDashboard.putNumber("Robot Heading", getHeading());
+        SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
+    }
+
     /**
      * Stops all the swerve modules
      */
@@ -99,6 +135,19 @@ public class SwerveSubsystem extends SubsystemBase {
         this.moduleTwo.stop();
         this.moduleThree.stop();
         this.moduleFour.stop();
+    }
+
+    public ChassisSpeeds getChassisSpeeds() {
+        return SwerveKinematics.driveKinematics.toChassisSpeeds(getModuleStates());
+
+    }
+
+    public void setChasisSpeeds(ChassisSpeeds chassisSpeeds) {
+
+        // Converts the chassis speeds to module states and sets them as the desired
+        // ones for the modules
+        SwerveModuleState[] moduleStates = SwerveKinematics.driveKinematics.toSwerveModuleStates(chassisSpeeds);
+        setModuleStates(moduleStates);
     }
 
     /**
@@ -126,6 +175,5 @@ public class SwerveSubsystem extends SubsystemBase {
         this.moduleFour.outputEncoderPosition();
 
         SmartDashboard.putNumber("Gyro degrees:", getRotation2d().getDegrees());
-        SmartDashboard.putNumber("Gyro Radians:", getRotation2d().getRadians());
     }
 }
