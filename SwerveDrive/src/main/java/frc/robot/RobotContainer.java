@@ -85,17 +85,20 @@ public class RobotContainer {
     // intakeController.y()
     // .whileTrue(Commands.parallel(new IntakePivot(IntakeMode.INTAKING),
     // Commands.repeatingSequence(new IntakeLaunch(IntakeMode.INTAKING))));
-    this.intakeController.y().whileTrue(new IntakeLaunch(IntakeMode.INTAKING));
-    // intakeController.y()
-    // .whileTrue(Commands.parallel(new IntakePivot(IntakeMode.INTAKING), new
-    // IntakeLaunch(IntakeMode.INTAKING)));
-    intakeController.x()
-        .whileTrue(new IntakeLaunch(IntakeMode.HIGH));
-    intakeController.a().whileTrue(new IntakeLaunch(IntakeMode.MIDDLE));
-    intakeController.b().whileTrue(Commands.parallel(new IntakePivot(IntakeMode.LOW),
-        Commands.sequence(Commands.waitSeconds(1), new IntakeLaunch(IntakeMode.LOW))));
-    intakeController.rightBumper().whileTrue(Commands.parallel(new IntakePivot(IntakeMode.LONG),
-        Commands.sequence(Commands.waitSeconds(1), new IntakeLaunch(IntakeMode.LONG))));
+
+    //this.intakeController.y().whileTrue(new IntakeLaunch(IntakeMode.INTAKING));
+    
+    intakeController.y().whileTrue(new IntakePivot(IntakeMode.LOW));
+  //   intakeController.y()
+  //    .whileTrue(Commands.parallel(new IntakePivot(IntakeMode.INTAKING), new
+  //   IntakeLaunch(IntakeMode.INTAKING)));
+  //   intakeController.x()
+  //       .whileTrue(new IntakeLaunch(IntakeMode.HIGH));
+  //   intakeController.a().whileTrue(new IntakeLaunch(IntakeMode.MIDDLE));
+  //   intakeController.b().whileTrue(Commands.parallel(new IntakePivot(IntakeMode.LOW),
+  //       Commands.sequence(Commands.waitSeconds(1), new IntakeLaunch(IntakeMode.LOW))));
+  //   intakeController.rightBumper().whileTrue(Commands.parallel(new IntakePivot(IntakeMode.LONG),
+  //       Commands.sequence(Commands.waitSeconds(1), new IntakeLaunch(IntakeMode.LONG))));
   }
 
   /**
@@ -112,8 +115,8 @@ public class RobotContainer {
       // Generate Trajectory
       Trajectory trajectory = TrajectoryGenerator.generateTrajectory(new Pose2d(0,
           0, new Rotation2d(0)),
-          List.of(new Translation2d(0, -1)),
-          new Pose2d(0, -2, new Rotation2d(0)),
+          List.of(new Translation2d(-1,0)),
+          new Pose2d(-2, 0, new Rotation2d(0)),
           trajectoryConfig);
 
       // Define PID controllers for tracking trajectory
@@ -186,9 +189,9 @@ public class RobotContainer {
       // new InstantCommand(() -> swerveSubsystem.stopModules()),
       // new InstantCommand(() -> System.out.println("Auto Complete")));
       // autoCommand.initialize();
-      Command autoCommand = Commands.parallel(new IntakeLaunch(IntakeMode.HIGH),
-          Commands.sequence(Commands.waitSeconds(1), new IntakeLaunch(IntakeMode.NONE)));
-      return swerveControllerCommand;
+      
+      Command autoCommand = Commands.sequence(new InstantCommand(()-> swerveSubsystem.zeroHeading()), swerveControllerCommand, new InstantCommand(()-> swerveSubsystem.stopModules()), new InstantCommand(()-> swerveSubsystem.zeroHeading()));
+      return autoCommand;
     } catch (Exception e) {
       e.printStackTrace();
       return null;

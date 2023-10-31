@@ -31,7 +31,7 @@ public final class Constants {
     public static int SWERVE_MODULE_ONE_ENCODER = 10;
     public static boolean SWERVE_MODULE_ONE_DRIVE_MOTOR_REVERSED = true;
     public static boolean SWERVE_MODULE_ONE_TURNING_MOTOR_REVERSED = true;
-    public static double SWERVE_MODULE_ONE_ENCODER_OFFSET_RAD = -0.407;
+    public static double SWERVE_MODULE_ONE_ENCODER_OFFSET_RAD = -0.468;
     public static boolean SWERVE_MODULE_ONE_ABSOLUTE_ENCODER_REVERSED = false;
 
     // Module two
@@ -41,7 +41,7 @@ public final class Constants {
     public static int SWERVE_MODULE_TWO_ENCODER = 11;
     public static boolean SWERVE_MODULE_TWO_DRIVE_MOTOR_REVERSED = false;
     public static boolean SWERVE_MODULE_TWO_TURNING_MOTOR_REVERSED = true;
-    public static double SWERVE_MODULE_TWO_ENCODER_OFFSET_RAD = 0.284;
+    public static double SWERVE_MODULE_TWO_ENCODER_OFFSET_RAD = 0.353;
     public static boolean SWERVE_MODULE_TWO_ABSOLUTE_ENCODER_REVERSED = false;
 
     // Module three
@@ -51,7 +51,7 @@ public final class Constants {
     public static int SWERVE_MODULE_THREE_ENCODER = 12;
     public static boolean SWERVE_MODULE_THREE_DRIVE_MOTOR_REVERSED = true;
     public static boolean SWERVE_MODULE_THREE_TURNING_MOTOR_REVERSED = true;
-    public static double SWERVE_MODULE_THREE_ENCODER_OFFSET_RAD = -3.094;
+    public static double SWERVE_MODULE_THREE_ENCODER_OFFSET_RAD = -3.102;
     public static boolean SWERVE_MODULE_THREE_ABSOLUTE_ENCODER_REVERSED = false;
 
     // Module four
@@ -61,7 +61,7 @@ public final class Constants {
     public static int SWERVE_MODULE_FOUR_ENCODER = 13;
     public static boolean SWERVE_MODULE_FOUR_DRIVE_MOTOR_REVERSED = false;
     public static boolean SWERVE_MODULE_FOUR_TURNING_MOTOR_REVERSED = true;
-    public static double SWERVE_MODULE_FOUR_ENCODER_OFFSET_RAD = -0.851;
+    public static double SWERVE_MODULE_FOUR_ENCODER_OFFSET_RAD = -0.887;
     public static boolean SWERVE_MODULE_FOUR_ABSOLUTE_ENCODER_REVERSED = false;
 
     // Extra fields
@@ -80,10 +80,10 @@ public final class Constants {
     public static double MAX_DRIVE_ACCELERATION_METERS_PER_SECOND_SQUARED = 1;
     public static double MAX_TURN_ACCELERATION_RADIANS_PER_SECOND_SQUARED = Math.PI / 2;
 
-    public static double PHYSICAL_MAX_SPEED_METERS_PER_SECOND = 5;
-    public static double MAX_DRIVE_SPEED_METERS_PER_SECOND = PHYSICAL_MAX_SPEED_METERS_PER_SECOND / 1;
+    public static double PHYSICAL_MAX_SPEED_METERS_PER_SECOND = 15;
+    public static double MAX_DRIVE_SPEED_METERS_PER_SECOND = PHYSICAL_MAX_SPEED_METERS_PER_SECOND /1;
 
-    public static double PHYSICAL_MAX_ANGULAR_SPEED_METERS_PER_SECOND = 2 * 2 * Math.PI;
+    public static double PHYSICAL_MAX_ANGULAR_SPEED_METERS_PER_SECOND = 2.5 * 2.5 * Math.PI;
     public static double MAX_DRIVE_ANGULAR_SPEED_RADIANS_PER_SECOND = PHYSICAL_MAX_ANGULAR_SPEED_METERS_PER_SECOND
         / 2;
 
@@ -120,19 +120,19 @@ public final class Constants {
 
     public static double PIVOT_ERROR_THRESHOLD = 0.5;
 
-    public static int[] INTAKE_PIVOT_POSITIONS = { 17000, 17000, 0, 0, 10000, 0 };
-    public static double[] INTAKE_FRONT_SPEEDS = { 0.25, -0.25, -0.25, -0.25, -0.25, 0 };
-    public static double[] INTAKE_BACK_SPEEDS = { -0.25, 0.25, 0.15, 0.25, 0.5, 0 };
+    public static int[] INTAKE_PIVOT_POSITIONS = { 15000, 15000, 0, 0, 10000, 0 };
+    public static double[] INTAKE_FRONT_SPEEDS = { 0.25, -0.25, -1, -0.25, -0.25, 0 };
+    public static double[] INTAKE_BACK_SPEEDS = { -0.25, 0.25, 1, 0.25, 0.5, 0 };
 
     public static int TIMEOUT_MS = 30;
     public static int PID_LOOP_IDX = 0;
     public static int PID_SLOT_IDX = 0;
     public static Gains GAINS = new Gains(0.2, 0.0, 0.0, 0.2, 0, 1.0);
 
-    public static int CRUISE_SPEED = 120000;
-    public static int CRUISE_ACCELERATION = 48000;
+    public static int CRUISE_SPEED = 240000;
+    public static int CRUISE_ACCELERATION = 96000;
 
-    public static int MOTION_MAGIC_SMOOTHING = 8;
+    public static int MOTION_MAGIC_SMOOTHING = 5;
 
     public enum IntakeMode {
       INTAKING(0),

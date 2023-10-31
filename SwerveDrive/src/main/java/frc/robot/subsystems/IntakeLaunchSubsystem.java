@@ -26,14 +26,13 @@ public class IntakeLaunchSubsystem extends SubsystemBase {
   private CANSparkMax intakeBack;
 
   public IntakeLaunchSubsystem() {
-    this.intakeFront = new CANSparkMax(IntakeConstants.INTAKE_FRONT_SPARK_MAX_ID, MotorType.kBrushed);
+    this.intakeFront = new CANSparkMax(IntakeConstants.INTAKE_FRONT_SPARK_MAX_ID, MotorType.kBrushless);
     this.intakeBack = new CANSparkMax(IntakeConstants.INTAKE_BACK_SPARK_MAX_ID, MotorType.kBrushless);
   }
 
   public void setSpeeds(double frontSpeed, double backSpeed) {
 
-    this.intakeFront.setVoltage(2);
-    System.out.println("Intake Front" + frontSpeed);
+    this.intakeFront.set(frontSpeed);
     this.intakeBack.set(backSpeed);
 
     SmartDashboard.putNumber("Intake Front Speed", frontSpeed);
