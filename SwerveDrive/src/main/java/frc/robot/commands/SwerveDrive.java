@@ -77,7 +77,7 @@ public class SwerveDrive extends CommandBase {
     ySpeed = Math.abs(ySpeed) > Constants.ControllerConstants.DEADBAND ? ySpeed : 0.0;
     turningSpeed = Math.abs(turningSpeed) > Constants.ControllerConstants.DEADBAND ? turningSpeed : 0.0;
 
-    // Limits the input so that the robot is smooth
+    // Limits the input to ensure smooth and depending on if fine control is active
     xSpeed = xLimiter.calculate(xSpeed) * Constants.SwerveKinematics.MAX_DRIVE_SPEED_METERS_PER_SECOND
         / (fineControl ? SwerveKinematics.FINE_CONTROL_DIVIDER : 1);
     ySpeed = yLimiter.calculate(ySpeed) * Constants.SwerveKinematics.MAX_DRIVE_SPEED_METERS_PER_SECOND
