@@ -5,7 +5,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 /**
@@ -18,8 +17,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * project.
  */
 public class Robot extends TimedRobot {
-  private Command auto;
-
   /**
    * This function is run when the robot is first started up and should be used
    * for any
@@ -45,13 +42,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    // Runs the Scheduler. This is responsible for polling buttons, adding
-    // newly-scheduled
-    // commands, running already-scheduled commands, removing finished or
-    // interrupted commands,
-    // and running subsystem periodic() methods. This must be called from the
-    // robot's periodic
-    // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
   }
 
@@ -70,37 +60,15 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    // this.auto = RobotContainer.getInstance().getAutonomousCommand();
-    // if (this.auto != null) {
-    //   try {
-    //     auto.initialize();
-    //     CommandScheduler.getInstance().schedule(auto);
-    //     System.out.println("Execute");
-    //   } catch (Exception e) {
-    //     e.printStackTrace();
-    //   }
-    // } else {
-    //   System.out.println("No Auto Command Found");
-    // }
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    if (this.auto != null) {
-      CommandScheduler.getInstance().run();
-    }
   }
 
   @Override
   public void teleopInit() {
-    // This makes sure that the autonomous stops running when
-    // teleop starts running. If you want the autonomous to
-    // continue until interrupted by another command, remove
-    // this line or comment it out.
-    if (auto != null) {
-      auto.cancel();
-    }
   }
 
   /** This function is called periodically during operator control. */

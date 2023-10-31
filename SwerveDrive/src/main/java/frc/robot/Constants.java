@@ -81,7 +81,7 @@ public final class Constants {
     public static double MAX_TURN_ACCELERATION_RADIANS_PER_SECOND_SQUARED = Math.PI / 2;
 
     public static double PHYSICAL_MAX_SPEED_METERS_PER_SECOND = 15;
-    public static double MAX_DRIVE_SPEED_METERS_PER_SECOND = PHYSICAL_MAX_SPEED_METERS_PER_SECOND /1;
+    public static double MAX_DRIVE_SPEED_METERS_PER_SECOND = PHYSICAL_MAX_SPEED_METERS_PER_SECOND;
 
     public static double PHYSICAL_MAX_ANGULAR_SPEED_METERS_PER_SECOND = 2.5 * 2.5 * Math.PI;
     public static double MAX_DRIVE_ANGULAR_SPEED_RADIANS_PER_SECOND = PHYSICAL_MAX_ANGULAR_SPEED_METERS_PER_SECOND
@@ -111,6 +111,7 @@ public final class Constants {
     public static double SWERVE_GEAR_RATIO = 1 / (150.0 / 7);
   }
 
+  // Constants for the Intake System
   public final static class IntakeConstants {
     public static int INTAKE_PIVOR_ID = 1;
     public static int INTAKE_FRONT_SPARK_MAX_ID = 10;
